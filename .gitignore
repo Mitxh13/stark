@@ -1,11 +1,57 @@
+# .gitignore is a safety net, not access control. The "blocked-paths" pre-commit hook also
+# catches anything added with `git add -f`.
+
+# Your own local scratch folder: never tracked, never shared
+.devyard/
+
+# Secrets (.env.example lists variable names only)
+.env*
+!.env.example
+
+# Data, model weights, ledgers, checkpoints, experiment outputs, run logs
+/data/
+benchmark/raw/
+ledgers/
+checkpoints/
+outputs/
+wandb/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.gguf
+*.db
+*.sqlite*
+
+# PDFs are blocked by default (large binaries)
+*.pdf
+
+# Local coding-agent state
+.antigravity/
+.gemini/
+.agents/mcp_config.json
+.agents/plugins/
+.claude/settings.local.json
+.claude/worktrees/
+AGENTS.local.md
+CLAUDE.local.md
+
+# Python
 __pycache__/
 *.pyc
 .venv/
 venv/
-.env
-.pytest_cache/
-.mypy_cache/
 *.egg-info/
 dist/
 build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# OS / editor
 .DS_Store
+Thumbs.db
+*.swp
+.idea/
