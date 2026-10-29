@@ -1,0 +1,59 @@
+# Install once per clone: uv run pre-commit install
+# Run everything:        uv run pre-commit run --all-files
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+        # LICENSE stays verbatim. The three docs are the team's unedited templates;
+        # TODO: drop them from this line once the team has written them.
+        exclude: ^(LICENSE|docs/(PRD|research|ARCHITECTURE)\.md)$
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: ^LICENSE$
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+      - id: ruff-format
+
+  # Scans staged changes only, so it runs on commit, not in CI.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      # Fails if any of these paths is staged or tracked. They are all gitignored, so this
+      # only fires after `git add -f`. To publish one PDF, remove `pdf` from the list below.
+      - id: blocked-paths
+        name: no .devyard, data, secrets, weights, ledgers, outputs or PDFs
+        language: fail
+        entry: "never commit these; unstage with `git restore --staged <path>`:"
+        files: |
+          (?ix)^(
+              \.devyard/
+            | data/
+            | benchmark/raw/
+            | (.*/)?(ledgers|checkpoints|outputs|wandb)/
+            | (.*/)?\.env(?!\.example$)(\..*)?$
+            | \.antigravity/ | \.gemini/ | \.agents/(mcp_config\.json$|plugins/)
+            | \.claude/(settings\.local\.json$|worktrees/)
+            | .*\.(pdf|safetensors|bin|pt|pth|ckpt|gguf|db|sqlite[^/]*)$
+          )
+      # Student registration numbers are personal data.
+      - id: no-student-ids
+        name: no student registration numbers
+        language: pygrep
+        entry: PES2UG[0-9A-Z]+
+        args: [--ignore-case]
