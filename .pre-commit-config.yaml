@@ -1,5 +1,7 @@
-# Install once per clone: uv run pre-commit install
+# Install once per clone: uv run pre-commit install   (installs the commit and commit-msg hooks)
 # Run everything:        uv run pre-commit run --all-files
+
+default_install_hook_types: [pre-commit, commit-msg]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -57,3 +59,11 @@ repos:
         language: pygrep
         entry: PES2UG[0-9A-Z]+
         args: [--ignore-case]
+      # Commits and PRs belong to the person who makes them: no line crediting a coding agent.
+      # CI also runs this on every PR's commit messages, title and description.
+      - id: no-agent-attribution
+        name: no agent attribution in the commit message
+        language: pygrep
+        entry: '(co-authored-by|assisted-by|(generated|written|created|made) (with|by)).*(claude|anthropic|gemini|antigravity|copilot|openai|chatgpt|codex|cursor|devin|aider|windsurf|\[bot\])'
+        args: [--ignore-case]
+        stages: [commit-msg]
