@@ -78,6 +78,10 @@ In each case, STARK shows which answers the document affected and removes it wit
 
 STARK is being developed.
 
+## Development
+
+Setup, commands and project rules, for people and coding agents alike, are in [AGENTS.md](AGENTS.md).
+
 ## Licence
 
 Licensed under the [Apache License 2.0](LICENSE).
