@@ -16,11 +16,11 @@ Nothing else is built yet. Add a file or folder only when it has real content, a
 ## Commands
 ```
 uv sync                              # install
-uv run pre-commit install            # once per clone: run the checks on every commit
+uv run pre-commit install            # once per clone: checks every commit and commit message
 uv run pre-commit run --all-files    # hygiene, ruff, gitleaks, blocked paths, student IDs
 uv run pytest                        # tests, CPU only
 ```
-Run the last two before saying work is done and before opening a PR. CI runs the same two on every PR.
+Run the last two before saying work is done and before opening a PR. CI runs the same two on every PR, and also checks the PR's commit messages, title and description for agent attribution.
 
 ## Conventions
 - Python 3.10+ (no newer syntax), `uv`, ruff with line length 100.
@@ -41,6 +41,7 @@ Each one is load-bearing for the exact-removal proof. NEVER change code in a way
 - **Exactness tests.** NEVER edit expected values in `tests/test_toy.py` or `tests/test_properties.py` to make a test pass. If one fails, report it and stop. The real gates (replay equals live; source removal equals a re-run) come with the learner and run manually on a GPU; CI is CPU only.
 
 ## Never
+- Credit a coding agent in git or on GitHub. No `Co-Authored-By` trailer for an agent, no "Generated with ..." line and no other note naming an AI tool as author or contributor, in commit messages, PR titles or PR descriptions. Commits and PRs belong to the person who makes them. The commit-msg hook and CI reject such lines; never bypass them with `--no-verify`.
 - Read or write `.env*`. Secrets live in each developer's local `.env`; the variable names are `HF_TOKEN` and `WANDB_API_KEY`. Ask the human for values.
 - Use `git add -f`, rewrite history, or edit `LICENSE`.
 - Commit secrets, weights, data, ledgers, checkpoints, experiment outputs, student ID numbers, real personal data, PDFs or RBI-style branding (letterheads, logos, official imagery). The pre-commit hooks block most of these.
