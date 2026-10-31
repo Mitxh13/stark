@@ -33,8 +33,8 @@ Run the last two before saying work is done and before opening a PR. CI runs the
 ## Invariants
 Each one is load-bearing for the exact-removal proof. NEVER change code in a way that breaks one.
 
-- **Numerics.** The real learning layer runs in float32 with deterministic kernels. Ledger tensors Z, Y and E are stored in 16-bit; checkpoints of W are float32. float64 is used ONLY in `reference.py` and the tests.
-- **Addresses and teacher answers.** Addresses Z never depend on W (they come from frozen layers below the learning layer). Teacher answers Y are recorded constants computed with W as at session start; TTCD's current-weights teacher is an optional, separately flagged variant.
+- **Numerics.** The real learning layer runs in float32 with deterministic kernels and TF32 off. The ledger stores addresses Z in bfloat16, exactly as computed, and teacher answers Y in float32. The gap E is never stored; replay recomputes it. Checkpoints of W are float32. float64 is used ONLY in `reference.py` and the tests.
+- **Addresses and teacher answers.** Addresses Z never depend on W (they come from frozen layers below the learning layer). Teacher answers Y are recorded constants computed with the pretrained weights `W_pre`, never with learned weights, in any session; TTCD's current-weights teacher is an optional, separately flagged variant.
 - **Append-only ledger.** During normal learning the ledger is append-only. Source removal is the ONLY operation that may recompute or delete entries, and every removal is authorised, logged and recorded as an event.
 - **Hiding a source** means masking it from attention so later tokens keep their original positions. Never delete its tokens from the stream.
 - **Constants.** Chunk size (64 tokens) and checkpoint interval (100 entries) are defined once, in `src/stark/config.py`, when the code that uses them is written. Never hard-code them anywhere else.
