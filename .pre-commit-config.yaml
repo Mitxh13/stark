@@ -8,9 +8,8 @@ repos:
     rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
-        # LICENSE stays verbatim. The three docs are the team's unedited templates;
-        # TODO: drop them from this line once the team has written them.
-        exclude: ^(LICENSE|docs/(PRD|research|ARCHITECTURE)\.md)$
+        # LICENSE stays verbatim.
+        exclude: ^LICENSE$
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
         exclude: ^LICENSE$
